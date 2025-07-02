@@ -1,0 +1,111 @@
+1. Integralność bazy danych, jakie znasz warunki integralności.
+Integralność bazy danych to zestaw zasad i ograniczeń mających na celu zapewnienie dokładności, spójności i wiarygodności danych w bazie danych.
+Integralność: encji, referencyjna ,domeny ,operacyjna ,wartości null ,unikalności ,wyzwalaczy, warunków.
+2. Co to są transakcje i jakie mają własności.
+Transakcje w SQL to sekwencje operacji wykonywanych jako pojedyncza jednostka pracy, która musi być wykonana w całości lub wcale.
+Własności: Atomowość, Spójność, Izolacja, Trwałość.
+3. Jakie uprawnienia może mieć użytkownik i jak je zmieniać.
+Uprawnienia: globalne, na poziomie bazy danych, na poziomie tabeli, na poziomie kolumny, na poziomie rutyn (procedury, funkcje).
+Zmienianie GRANT/REVOKE “SELECT/INSERT ITP” ON “gdzie” TO/FROM “uzytkownik”
+4. Integralność referencyjna i jak zapobiegać usuwaniu danych z kluczem obcym - on delete cascade.
+Integralność referencyjna odnosi się do zasad, które zapewniają spójność danych pomiędzy powiązanymi tabelami w  
+bazie danych. ON DELETE CASCADE automatycznie usuwa rekordy w tabeli zależnej, gdy rekord w tabeli nadrzędnej zostanie usunięty.
+5. Co to są pojęcia wyzwalającę, do czego służą i jak się robi.
+Wyzwalacze to specjalne procedury składowane, które automatycznie wykonują określone akcje w odpowiedzi na zdarzenia występujące  
+w tabelach baz danych. Wyzwalacze są używane do utrzymania integralności danych czy też automatyzacji określonych zadań.
+Wyzwalacz tworzy się za pomocą CREATE FUNCTION i później CREATE TRIGGER
+Rodzaje: Before Triggers (Wyzwalacze przed wykonaniem akcji)/After triggers
+6. Jakie warunki musi spełnić transakcja, żeby był konflikt.
+-Konflikt Read-Write - Występuje, gdy jedna transakcja odczytuje wartość, którą inna transakcja później modyfikuje.
+-Konflikt Write-Write - Występuje, gdy dwie transakcje próbują jednocześnie modyfikować tę samą wartość.
+-Konflikt Read-Read - Rzadko prowadzi do niespójności, ponieważ odczytanie tej samej wartości przez dwie transakcje nie wpływa na siebie nawzajem.
+-Konflikt odczytu-zapisu pośredniego (Write Skew) - Występuje, gdy dwie transakcje odczytują te same wartości i  
+na podstawie tych odczytów wykonują zapisy, które mogą prowadzić do niespójności.
+7. Relacja jedno:jednoznaczna:  Każdy rekord w jednej tabeli jest powiązany z dokładnie jednym rekordem w innej tabeli, i odwrotnie.(unique)
+8. Rodzaje i co to zagnieżdzenie.
+Zapytania/instrukcje wewnątrz innych zapytań/instrukcji.  
+Zapytanie, które zwraca: pojedynczą wartość(scalar subquery), jeden wiersz(row subquery), cały zestaw wierszy(table subquery)
+9. Współbieżność problemy, rozwiązania.
+Współbieżność w bazach danych odnosi się do sytuacji, w której wiele transakcji jest wykonywanych jednocześnie.  
+Brudne odczyty - Odczytanie danych, które zostały zmodyfikowane przez inną transakcję, ale jeszcze nie zostały zatwierdzone
+Powtarzające się odczyty - Odczytanie tej samej wartości w jednej transakcji może dać różne wyniki, jeśli inna transakcja zmodyfikowała tę wartość pomiędzy odczytami.
+Fantomy - Występują, gdy nowy wiersz jest dodawany lub istniejący wiersz jest usuwany przez inną transakcję między dwoma zapytaniami SELECT w tej samej transakcji.
+Utracone aktualizacje - Występują, gdy dwie transakcje odczytują tę samą wartość i obie wykonują na niej operację zapisu, co powoduje utratę jednej z aktualizacji.
+Rozwiazania: poziomy izolacji, zamki(dzielony/wyłączny), kontrola wersji
+10. Jakie są operacje na relacjach.
+SELECT, INSERT, UPDATE, DELETE, COUNT, SUM, AVG, MIN, MAX, GROUP BY, CREATE, ALTER,   DROP
+INNER JOIN: Zwraca wiersze, które mają dopasowania w obu tabelach.
+LEFT   JOIN: Zwraca wszystkie wiersze z lewej tabeli, oraz dopasowania z prawej tabeli
+RIGHT JOIN: Zwraca wszystkie wiersze z prawej tabeli, oraz dopasowania z lewej tabeli
+WHERE: zwraca wiersze zgodne z regułą
+11. Rozkład otwracalny tw. Heatha.
+Niech R będzie schematem relacji. Załóżmy, że R = α ∪  β ∪  γ, gdzie
+γ = R \ (α ∪  β). Jeśli w R spełniona jest zależność α →  β, to R można
+bezstratnie rozłożyć na (α ∪  β, α ∪  γ).
+13. Zastosowania perspektyw (podobno są trzy)
+Ułatwienie dostępu do danych(zastepuja skomplikowane zapytanai)
+Ochrona danych(mozna ograniczyc widocznosc kolumn/wierszy)
+Zarządzanie złożonością(gdy dane przechowywane są w złożonych strukturach, perspektywy umożliwiają tworzenie prostych widoków)
+Agregacje i raportowanie(Można w nich zawrzeć zapytania, które grupują, sumują lub obliczają statystyki)
+Integracja danych(Mogą łączyć dane z różnych baz danych lub różnych części tej samej bazy danych w jednym miejscu)
+14. Wartość Null, do czego się używa.
+NULL jest specjalną wartością, która oznacza brak wartości lub nieokreśloność danej.
+Ulatwienie dodawania nowych rekordow, aktualizacji wartości, porownywania wartości, pomijanie w funkcjach agregujacych
+15. Co to jest integralność referencyjna.
+Utrzymywania spójności relacji między różnymi tabelami poprzez zastosowanie ograniczeń referencyjnych. Gwarantuje, że wartości  
+w kolumnach, które są kluczami obcymi, zawsze odwołują się do istniejących wartości w odpowiadających kolumnach jako klucze główne.
+Ograniczenia referencyjne: ON DELETE/UPDATE CASCADE/RESTRICT
+16. Integralność tabeli.
+Zapewnienia poprawności danych w ramach pojedynczej tabeli poprzez zastosowanie różnych technik i ograniczeń.  
+Aspekty integralności: klucz główny/obcy,   unikalność, ograniczenia NOT NULL
+17. Co to normalizacja. Postacie normalizacji.
+Procesu organizacji danych w tabelach w taki sposób, aby zminimalizować powtarzające się dane i zapewniać integralność danych.  
+1NF: każda komórka w tabeli zawiera pojedynczą wartość, każda kolumna jest atomowa, wszystkie wartości są unikalne
+2NF: tabela jest w 1NF, każda ni-kluczowa kolumna zależy od całego klucza głównego, unikanie częściowej zależności
+3NF: tabela jest w 2NF, każda ni-kluczowa kolumna jest zależna tylko od klucza głównego tabeli, a nie od innych ni-kluczowych kolumn, unikanie zależności przejściowych
+BCNF(Boyce'a-Codda): każda ni-kluczowa kolumna jest zależna tylko od klucza głównego, dotyczy to sytuacji, gdy każdy determinant jest kluczem kandydackim.
+4NF: tabela jest w BCNF, eliminuje wieloznaczność wieloznaczności, która występuje, gdy tabela ma więcej niż jedno niezależne, multivalued zależności.
+5NF: tabela jest w 4NF, eliminuje zależności losowe, które występują, gdy pewne atrybuty niezależne są zależne od innych atrybutów niezależnych.
+18. Zakleszczenie, jak rozwiązać.
+Sytuacja, gdy dwa lub więcej wątków lub procesów wzajemnie blokują się nawzajem, oczekując na zasoby, które są już zajęte przez inne procesy w grupie. Rozwiązania:  
+monitorowanie i wykrywanie, zastosowanie timeoutów, hierarchiczne blokowanie, unikanie zakleszczeń, przerwanie transakcji, detekcja i restartowanie, optymalizacja zapytań i transakcji
+19. Jak realizowane są transakcje wieloznaczne i 1:1.
+Transakcje wieloznaczne: Realizowane są poprzez zastosowanie tabeli pośredniej (łączącej) w bazie danych, która zawiera klucze obce do dwóch lub więcej tabel, umożliwiając mapowanie relacji wielu do wielu.
+Relacje 1:1: Realizowane są poprzez umieszczenie klucza obcego w jednej z tabel, który odnosi się do klucza głównego w drugiej tabeli, zapewniając jednoznaczne powiązanie między rekordami obu tabel.
+21. Czym różni się perspektywa (view) od tabeli tymczasowej.
+Perspektywa to logiczny widok na dane, nie przechowuje fizycznie danych i jest używana głównie do uproszczenia zapytań i kontroli dostępu.  
+Tabela tymczasowa jest fizyczną tabelą, która przechowuje dane tymczasowo i jest używana do przechowywania wyników tymczasowych operacji lub przetwarzania.
+22. Opisz jak się przenosi Diagram związków encji na język Sql.
+1: Identyfikacja encji i ich atrybutów, 2: Definicja tabel w SQL, 3: Ustalenie relacji między tabelami, 4: Definicja kluczy głównych i obcych, 5: Implementacja związków specjalnych
+23. Do jakiej postaci normalnej najłatwiej sprowadzić bazę. Opisz sytuację w jakiej się nie da sprowadzić.
+(1NF). Jest to najbardziej podstawowa postać normalizacji, w której każda komórka w tabeli zawiera pojedynczą wartość, a wszystkie kolumny są atomowe (niepodzielne).
+Nie da sie, gdy: Kolumny zawierające wielowartościowe dane, Powiązania wielowartościowe, Dane powtarzające się  
+24. Jakie są rodzaje blokad z teorii baz danych i którę z tych blokad ze sobą kolidują.
+Blokada wiersza - Blokuje pojedynczy wiersz w tabeli, umożliwiając innym transakcjom dostęp do pozostałych wierszy w tej samej tabeli.
+Blokada strony - Blokuje całą stronę danych (zazwyczaj kilka wierszy)
+Blokada tabeli - Blokuje całą tabelę
+Blokada kolumny - Blokuje pojedynczą kolumnę w tabeli
+wiersza vs tabeli, strony vs wiersza, kolumny vs wiersza
+25. Co to jest redundacja.
+Te same dane są przechowywane lub powielane w różnych miejscach w systemie.
+26. Pytanie o algebre relacji.
+To matematyczny zestaw operacji używanych do manipulowania relacjami w bazach danych
+Selekcja - Wybiera wiersze, które spełniają określone warunki.
+Projekcja - Wybiera określone kolumny z relacji.
+Unia - Łączy dwie relacje, usuwając duplikaty.
+Różnica - Zwraca wiersze występujące w jednej relacji, ale nie występujące w drugiej.
+Złączenie - Łączy wiersze dwóch relacji na podstawie określonego warunku
+28. Opisz w jaki sposób w SQL realizowane są załączenia.
+Inner join zwraca wiersze, które mają pasujące wartości w obu tabelach.
+Left join zwraca wszystkie wiersze z lewej tabeli oraz pasujące wiersze z prawej tabeli.
+Right join zwraca wszystkie wiersze z prawej tabeli oraz pasujące wiersze z lewej tabeli.
+Full join zwraca wszystkie wiersze z obu tabel, łącząc pasujące wiersze z obu stron.
+29. Co to jest klucz główny, kandydujący, czy może być null. Czy klucz obcy może być null.
+Klucz główny to unikalny identyfikator dla każdego rekordu w tabeli.
+Klucz kandydujący jest to pole lub zestaw pól, które mogłyby być używane jako klucz główny.
+Klucz główny i klucz kandydujący nie mogą mieć wartości null, obcy może.
+30. Jakie są poziomy izolacji.
+Read Uncommitted - Najniższy poziom izolacji, pozwala na odczyt niezcommitowanych danych
+Read Committed - Zapewnia, że odczytywane są tylko zatwierdzone dane.
+Repeatable Read - Zapewnia, że dane odczytane przez transakcję nie zmienią się do końca tej transakcji.
+Serializable - Najwyższy poziom izolacji, zapewnia pełną izolację transakcji, tak jakby były wykonywane sekwencyjnie.

@@ -1,0 +1,387 @@
+Bazy Danych         © Andrzej M. Borzyszkowski 
+Bazy Danych
+Andrzej M. Borzyszkowski
+Instytut Informatyki 
+Uniwersytetu Gdańskiego
+materiały dostępne elektronicznie
+http://inf.ug.edu.pl/~amb
+ 2/29
+Bazy Danych         © Andrzej M. BorzyszkowskiModelowanie danych 
+(model związków encji)
+ 3/29
+Bazy Danych         © Andrzej M. BorzyszkowskiModelowanie rzeczywistości
+●Model semantyczny: „rozumiemy” modelowaną rzeczywistość
+–potem planujemy jej reprezentację
+Projektowanie bazy danych: analiza wymagań
+●wymagania funkcjonalne (planowane operacje)
+–diagramy przepływu danych, diagramy sekwencji, 
+scenariusze (inżynieria oprogramowania)
+–stosowane są diagramy UML ( uni￿ed modelling language )
+●wymagania danych
+–schemat koncepcyjny: decyzje biznesowe ( bussiness logic ) 
+– co chcemy przechowywać?
+–jakie operacje chcemy wykonywać
+–warunki spójności narzucane na dane
+  4/29
+Bazy Danych         © Andrzej M. BorzyszkowskiModelowanie rzeczywistości, c.d.
+●Modele historyczne
+–model hierarchiczny (np. drzewo katalogów systemu 
+operacyjnego)
+–model sieciowy
+●Model relacyjny (Peter Chen 1976)
+–dane tworzą relację/wiele relacji
+●relacja (relation) ≈ tabela ( table)
+–diagramy związków encji – entity relationship diagrams
+●Modele przyszłości ?
+–model obiektowo-relacyjny
+–model semistrukturalny
+–itd. 
+ 5/29
+Bazy Danych         © Andrzej M. BorzyszkowskiEncje i związki
+●Encja (entity): realny byt, jednostkowy i odróżnialny od innych 
+podobnych encji, np. człowiek, przedmiot, organizacja
+–baza danych zawiera właśnie informacje o encjach
+–encje pewnego typu stanowią zbiór, ma on swoją nazwę
+–encje charakteryzują się własnościami.
+●Własność  (atrybut): cecha encji przechowywana w bazie 
+danych
+–ma wartość w pewnym zbiorze właściwym dla tej własności
+–a priori może być złożona, wielowartościowa, pochodna.
+●Klucz (key): jedna lub więcej własności jednoznacznie 
+identy￿kujących encję w bazie danych.
+●Związek  (relationship ): zależność pomiędzy zbiorami encji 
+w bazie danych, ma swoją nazwę.
+ 6/29
+Bazy Danych         © Andrzej M. BorzyszkowskiEncje
+●Encja (jednostka) jest 
+opisywana atrybutami
+–np. imię, nazwisko, 
+pesel (atrybuty proste)
+–mogą być atrybuty 
+złożone (np. adres)
+–pochodne (np. wiek)
+–wielowartościowe (np. 
+wykształcenie)
+–atrybuty mają prawo 
+mieć wartość 
+nieokreślonąStudent
+adrespesel
+nazwiskoimię
+ulicadommiastoWiekwykształcenieindeks
+ 7/29
+Bazy Danych         © Andrzej M. BorzyszkowskiEncje, c.d.
+●Typ encji de ￿niuje zbiór możliwych encji o tych samych 
+atrybutach – schemat, intensja
+●Ekstensja – chwilowy stan bazy danych, zbiór encji 
+przechowywanych w danej chwili
+●Atrybut kluczowy – dla każdej ekstensji atrybut jest 
+niepowtarzalny
+–tzn. nigdy nie będą przechowywane dwie encje o tej samej 
+wartości klucza
+–oznaczany jest jako podkreślenie nazwy
+–najczęściej jest to atrybut atomowy
+–może być kilka atrybutów kluczowych
+●Dziedzina wartości atrybutu nie jest na diagramie 
+reprezentowana
+–ani typ danych, ani dodatkowe ograniczenia
+ 8/29
+Bazy Danych         © Andrzej M. BorzyszkowskiZwiązki
+●Typ związku określa typy encji, pomiędzy którymi zachodzi 
+związek oraz dopuszczalną liczność elementów encji będących 
+w związku
+–bieżący stan bazy danych określa istniejące powiązania dla 
+danego związku
+●Np. w bazie danych przechowywane są informacje 
+o studentach, przedmiotach i zaliczeniach
+–„zalicza” jest związkiem pomiędzy encjami przedmiotów 
+i studentów, związkiem wieloznacznym
+–w bazie danych przechowywane są bieżące informacje na 
+powyższy temat, zmieniają się one w czasie
+–ale istnienie i typ związku jest niezmienny
+●Prawie zawsze związki są binarne (pomiędzy dwiema encjami)
+ 9/29
+Bazy Danych         © Andrzej M. BorzyszkowskiPrzykład
+●Szkoła Wyższa organizuje bazę danych zawierającą informacje 
+o nauczycielach akademickich (nazwisko, imię, nr legitymacji), 
+studentach  (nazwisko, imię, nr indeksu), wykładanych 
+przedmiotach  (nazwa, rodzaj, liczba godzin w tygodniu, kod) 
+i ich terminach  (dzień tygodnia, godzina, sala). 
+●Rozważamy też następujące związki między encjami:
+–odbywa się : każdy przedmiot posiada określony termin/salę
+●związek wzajemnie jednoznaczny, 1:1
+–jest prowadzony : każdy przedmiot jest prowadzony przez 
+nauczyciela, który prowadzi wiele przedmiotów
+●związek jednoznaczny, 1:N
+–zalicza: każdy student zalicza kilka przedmiotów, każdy 
+z nich gromadzi wielu studentów, zaliczenia są na ocenę
+●związek wieloznaczny, N:M
+ 10/29
+Bazy Danych         © Andrzej M. BorzyszkowskiKlasyfikacja (binarnych) związków encji
+Przedmiot Termin●1-1 (wzajemnie jednoznaczny)
+– każda encja z jednego 
+zbioru encji może być 
+skojarzona z co najwyżej 
+jedną encją z drugiego 
+zbioru 
+–pewne encje mogą 
+pozostać bez skojarzenia
+–czasami wyraźnie chcemy 
+uniknąć takiej sytuacji
+–np. przedmiot ma pełen 
+udział w związku oznacza, 
+że każdy przedmiot ma 
+przypisany termin –  
+wymóg istnienia
+ 11/29
+Bazy Danych         © Andrzej M. BorzyszkowskiKlasyfikacja (binarnych) związków encji
+●1-N (jednoznaczny)
+–każda encja ze jednego 
+zbioru może być skojarzona 
+z pewną ich liczbą z drugiego 
+zbioru
+–jednakże encja z drugiego 
+zbioru najwyżej z jedną encją 
+z pierwszego zbioru
+–i znowu mogą pozostać encje 
+bez skojarzenia
+–ale czasami wyraźnie chcemy 
+uniknąć takiej sytuacji
+–np. zapewnić, że przedmioty 
+mają obsadęNauczyciel Przedmiot
+ 12/29
+Bazy Danych         © Andrzej M. BorzyszkowskiKlasyfikacja (binarnych) związków encji
+●wieloznaczny 
+–dowolna liczba encji 
+z jednego zbioru może 
+być skojarzona z dowolną 
+liczbą encji z drugiego 
+zbioru
+–nadal aktualne uwagi 
+o encjach niezwiązanych
+Przedmiot Student
+ 13/29
+Bazy Danych         © Andrzej M. BorzyszkowskiCechy związków
+●Dla związku binarnego mamy dwie możliwe nazwy
+–student zalicza przedmiot – przedmiot jest zaliczany
+–przedmiot odbywa się w terminie – termin jest zajęty przez
+–nauczyciel wykłada przedmiot – przedmiot jest wykładany
+●Technicznie nie ma znaczenia jaką nazwę przyjmiemy
+–ale musi być jasna w przypadku związku rekursywnego
+–np. pracownik jest kierownikiem innego pracownika
+●Na diagramie można zaznaczać dokładniej możliwe liczebności 
+encji w związku, np. 1: ∞, 0:∞, 2:10
+–albo podawać tylko maksymalne ograniczenie
+ 14/29
+Bazy Danych         © Andrzej M. BorzyszkowskiEncje i związki, c.d
+●W diagramach encji i związków warto używać liczby 
+pojedynczej
+●ale tabela odpowiadająca encji będzie zawierać wiele 
+elementów
+●Związki mogą posiadać swoje atrybuty
+–np. student nie tylko uczęszcza na wykład, ale i zalicza na 
+ocenę w pewnej dacie
+ 15/29
+Bazy Danych         © Andrzej M. BorzyszkowskiDiagram ER (notacja ISO)
+Przedmiot1:1 0:Nprowadzi Nauczyciel
+rodzajnazwa
+kodliczba godzinimię
+nr leg.nazwisko
+terminstudent
+nazwiskonr indeksu
+imię1:1
+0:1odbywa się
+saladzień tyg
+godz.0:N 0:Nzaliczaocena data
+ 16/29
+Bazy Danych         © Andrzej M. BorzyszkowskiDiagram ER (notacja Martina)
+Przedmiot prowadzi Nauczyciel
+rodzajnazwa
+kodliczba godzinimię
+nr leg.nazwisko
+terminstudent
+nazwiskonr indeksu
+imięodbywa się
+saladzień tyg
+godz. zaliczaocena data
+ 17/29
+Bazy Danych         © Andrzej M. BorzyszkowskiDiagram ER w notacji UML
+Przedmiot
++kod: string
++nazwa: string
++rodzaj = w./ćw./lab.
++l. godz.: intNauczyciel
++nr leg.: int
++imię: string
++nazwisko: stringprowadzi0:* 1:1
+termin
++dzień = Pn/W/S/Cz/Pi/S/N
++godz = 8:20
++sala: intStudent
++imie: string
++nazwisko: string
++indeks: intodbywa się0:1
+1:10:*
+0:*
+zalicza
++data: date
++ocena: 2/3/4/5{}
+ 18/29
+Bazy Danych         © Andrzej M. BorzyszkowskiRodzaje notacji (wg wikipedii)
+●Związek 1 do wiele
+–różne koncepcje gdzie 
+postawić znak „wiele”
+–na ogół dwa różne 
+sformułowania
+●My będziemy stosować notację 
+Chena (romby) z użyciem 
+„kurzej stopki”, notacja Martina
+●źródło: is.gd/aAvquW
+ 19/29
+Bazy Danych         © Andrzej M. BorzyszkowskiRozszerzone diagramy encji i związków 
+(EERD)
+●Pojęcie dziedziczenia
+–np. student i nauczyciel 
+ma wspólne atrybuty 
+(imię, nazwisko itd.)
+–związek ,,jest” 
+(oznaczany trójkątem)
+–generalizacja
+●kompletna
+●rozłączna
+●Możliwe również 
+dziedziczenie wielokrotneNauczyciel StudentCzłowiekimięnazwisko
+pesel
+data zatrudnieniakierunek pensja
+ 20/29
+Bazy Danych         © Andrzej M. BorzyszkowskiEncje słabe 
+●Encja słaba: 
+–nie może istnieć bez encji  
+nadrzędnej
+–nie ma swojego klucza
+–Klucz słaby jest jednoznaczny 
+w ramach encji nadrzędnej
+–kluczem w bazie będzie para: 
+klucz słaby + klucz encji 
+nadrzędnejnagłówek faktury
+pozycja fakturyskładanumeradres nazwisko imię
+towar
+ilość cena jedn.numerdata
+cena łączna
+ 21/29
+Bazy Danych         © Andrzej M. BorzyszkowskiPrzykład: pracownicy w banku
+●Podstawowe encje to pracownicy  banku, możliwe specjalności  
+pracowników, oddziały banku oraz stanowiska  pracy w banku
+Pracownik (imię, nazwisko, data urodzenia);
+Odział (nazwa, miasto);
+Stanowisko (nazwa, pensja);
+Specjalność (nazwa);
+●Pracownicy są przypisani do jednego oddziału oraz zajmują 
+pewne stanowisko
+●Każdy z pracowników może mieć kilka specjalności
+●Diagram związków encji wykazuje encje wraz z ich atrybutami 
+oraz związki i ich rodzaje (i ew. atrybuty)
+–nie określa dziedzin atrybutów
+–nie wyjaśnia, czy są one wymagane
+–nie musi określać, czy dopuszczalne jest zero przypisań
+ 22/29
+Bazy Danych         © Andrzej M. BorzyszkowskiPracownicy w banku – ERD
+oddział
+pracownikstanowiskospecjalność
+posiada
+pracuje w zajmujenazwa miasto
+idnazwa
+pensja nazwaid
+id
+idimię nazwisko data urodzenia
+ 23/29
+Bazy Danych         © Andrzej M. BorzyszkowskiPracownicy w banku – format UML
+●Diagramy w wersji Chena-Martina są dość rozrzutne, jeśli 
+chodzi o zajętość miejsca
+●Format wzorowany na UML może być oszczędniejszy 
+(np. DBDesigner -- ujawnia nazwy kluczy obcych)
+ 24/29
+Bazy Danych         © Andrzej M. BorzyszkowskiJeszcze jeden przykład
+●Zaczynamy od trzech encji podstawowych
+Klient (nazwisko, adres, inne dane);
+Towar (nazwa, kod kreskowy , wielkość zapasów, ceny 
+kupna, oferowane itd);
+Zamówienie (od kogo pochodzi, zestawienie towarów , 
+daty wysyłki i inne, koszt wysyłki);
+ 25/29
+Bazy Danych         © Andrzej M. BorzyszkowskiPrzykład: Encje
+●Pierwsza postać normalna wyklucza możliwość podania 
+zestawienia towarów w jednej encji zamówienie
+–potrzebna jest osobna encja dla poszczególnych pozycji 
+każdego zamówienia
+–dopuszczając, że jeden towar może mieć wiele różnych 
+kodów kreskowych, trzeba stworzyć osobną tabelę dla tych 
+kodów
+●Decyzja, by stworzyć osobną tabelę dla wielkości zapasów
+–można podejrzewać, że będzie systematycznie 
+mody￿kowana
+Pozycja (jakiego zamówienia, towar, wielkość 
+zamówienia, inne, np. rabat);
+Kod_kreskowy (jakiego towaru, kod);
+Zapas (czego, ile);
+ 26/29
+Bazy Danych         © Andrzej M. BorzyszkowskiPrzykład: Związki
+[Klient] <składa> [Zamówienie]
+–związek 1 do wiele (zamówienie musi pochodzić od klienta, klient 
+może złożyć 0, 1 lub wiele zamówień)
+[Zamówienie] <składa się z> [Pozycje]
+–związek 1 do wiele (pozycja musi mieć określony nagłówek 
+zamówienia, zamówienie może mieć wiele pozycji lub być nawet 
+puste)
+[Pozycja] <dotyczy> [Towaru]
+–związek wiele do 1 (pozycja dotyczy towaru, nie może go nie 
+określić, towar może wystąpić w wielu pozycjach, ale w danych 
+zamówieniu tylko raz)
+[Towar] <ma> [Kod kreskowy]
+–związek 1 do wiele (dopuszczamy by towar miał wiele różnych 
+kodów, kod kreskowy musi jednoznacznie określać towar)
+ 27/29
+Bazy Danych         © Andrzej M. BorzyszkowskiZwiązki, c.d.
+[Towar] <występuje w> [Zapasie]
+–związek 1 do 1 (w tabeli zapasów jest najwyżej jedna 
+pozycja dla każdego towaru)
+●Uwaga: związek wieloznaczny [Zamówienie] <..> 
+[Towar]  potencjalnie z dodatkowymi atrybutami np. wielkość 
+zamówienia, został już rozłożony na dodatkową encję i dwa 
+związki "1 do wiele"
+[Zamówienie] <składa się z>  [Pozycja] 
+<dotyczy>  [Towaru]
+ 28/29
+Bazy Danych         © Andrzej M. BorzyszkowskiPrzykład: Diagram encji i związków
+klient
+zamówienieskłada
+pozycja składa dotyczytowarkod kreskowy
+posiadazapas
+występujenrtytułimienazwiskokod_pocz
+adresmiasto
+ulica_dom telefon
+nrdata_zlozenia data_wysylki
+koszt_wysylkiilosckod ilosc
+nr
+opis
+koszt
+cena
+ 29/29
+Bazy Danych         © Andrzej M. BorzyszkowskiPrzykład: Diagram encji i związków
+●Encje: pudełka
+●Związki: romby
+–ale w UML związki jako 
+komentarze nad 
+strzałkami
+●Rodzaj związków: jest bałagan 
+w notacji
+–„kurza stopka” jako 
+związek jeden-do-wiele
+–krotność możliwych 
+wystąpień encji (0,1,wiele)
+–ale notacja ISO pokazuje 
+krotność w przeciwny 
+sposób niż inne diagramyklient
+zamówienieskłada
+pozycjaskłada dotyczytowarkod kreskowy
+posiadazapas
+występuje

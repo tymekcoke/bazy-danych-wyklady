@@ -1,0 +1,335 @@
+Bazy Danych         © Andrzej M. Borzyszkowski 
+Bazy Danych
+Andrzej M. Borzyszkowski
+Instytut Informatyki 
+Uniwersytetu Gdańskiego
+materiały dostępne elektronicznie
+http://inf.ug.edu.pl/~amb
+ 2/23
+Bazy Danych         © Andrzej M. BorzyszkowskiModel relacyjny
+ 3/23
+Bazy Danych         © Andrzej M. BorzyszkowskiDane w jednej tabeli
+●Nadmiarowość danych
+–powtarzalna pełna nazwa oddziału
+–pensja zależna tylko od stanowiska
+●Wady
+–niespójność danych (różne pensje dla różnych referentów)
+–nie ma gdzie wpisać pensji prezesa (aktualny brak w/w)
+–nie ma gdzie wpisać danych nowego oddziału (jeszcze bez 
+pracowników)I Oddział Sopot Anna Drygas referent 4200
+I Oddział Sopot Kazimierz Moskal asystent 4750
+I Oddział Sopot Patrycja Songin referent 4200
+I Oddział Gdynia Mariusz Rumak referent 4200
+I Oddział Gdynia Bartosz Ostrowski kierownik 6000
+I Oddział Gdynia Anna Nehrebecka dyrektor 9500
+ 4/23
+Bazy Danych         © Andrzej M. BorzyszkowskiDane w strukturze hierarchicznej
+I Oddział Sopot
+Anna Drygas referent 4200
+Kazimierz Moskal asystent 4750
+Patrycja Songin referent 4200●Nadmiarowość danych
+–pensja zależna tylko 
+od stanowiska
+●Wady
+–niespójność danych
+–nie ma gdzie wpisać 
+pensji prezesa
+–wyszukiwanie wg 
+stanowiska wymaga 
+przeczesania całościI Oddział Sopot
+Anna Drygas referent 4200
+Kazimierz Moskal asystent 4750
+Patrycja Songin referent 4200
+I Oddział Gdynia
+Mariusz Rumak referent 4200
+Bartosz Ostrowski kierownik 6000
+Anna Nehrebec
+kadyrektor 9500
+II Oddział Gdynia
+ 5/23
+Bazy Danych         © Andrzej M. BorzyszkowskiPracownicy w banku – ERD
+oddział
+pracownikstanowiskospecjalność
+posiada
+pracuje w zajmujenazwa miasto
+idnazwa
+pensja nazwaid
+id
+idimię nazwisko data urodzenia
+ 6/23
+Bazy Danych         © Andrzej M. BorzyszkowskiRelacyjne bazy danych
+●Dane przechowywane są 
+w tabelach dla każdego 
+rodzaju encji
+–wyszukiwanie wg kluczy 
+głównych (indeksy)
+–powiązanie za pomocą       
+kluczy obcych
+●Zalety
+–brak redundancji – każda 
+informacja jest w jednej 
+kopii
+–wyszukiwanie wg różnych 
+kryteriów tak samo łatwe15Anna Drygas 1
+12Kazimierz Moskal 1
+15Patrycja Songin 1
+15Mariusz Rumak 2
+11Bartosz Ostrowski 2
+13Anna Nehrebecka 2I Oddział Sopot 1
+I Oddział Gdynia 2
+II Oddział Gdynia 3
+11kierownik 6000
+12asystent 4750
+13dyrektor 9500
+14prezes 25000
+15referent 4200
+ 7/23
+Bazy Danych         © Andrzej M. BorzyszkowskiIdea: relacyjna baza danych = tabele
+●Relacyjna baza danych: tabele + operacje na tabelach
+●Pojedyncza tabela, np. arkusz Excela:
+●
+–wiersz jest rekordem, dane jednej osoby
+●każda kolumna jest przeznaczona na pewną cechę
+●numer służy głównie do identy ￿kacji osoby (jest kluczem)
+●Terminologia matematyczna: tabela ≈ relacja
+ 8/23
+Bazy Danych         © Andrzej M. BorzyszkowskiArkusz kalkulacyjny, ograniczenia
+●Problem ze współbieżnością:
+–wielu użytkowników korzysta z tych samych danych
+–jeden plik nie może być równocześnie edytowany przez 
+kilku użytkowników
+●Problem z wydajnością:
+–proste operacje wyszukiwania, sortowania i inne stają się 
+zbyt złożone jeśli danych jest bardzo dużo
+●Problem z nadmiarem danych:
+–niektóre dane powtarzają się, zajmują miejsce, kopie mogą 
+być niedokładne
+●Problem z powtarzalnością pól:
+–struktura tabeli nie przewiduje powtórzeń, np. wiele imion
+–albo zaliczonych przedmiotów
+ 9/23
+Bazy Danych         © Andrzej M. BorzyszkowskiTerminologia
+nr tytul  nazwisko  imie kod_p  miasto
+3 Pani Szczęsna Jadwiga 81-444 Gdynia
+4 Pan Łukowski Bernard 81-620 Gdynia
+5 Pan Soroczyński Jan 80-230 Gdańsk
+6 Pani Niezabitows Marzena 80-619 Gdańsk
+7 Pani Kołak Agnieszka 80-832 Gdańsk
+8 NULL Hałasa Ewa 80-511 Gdańskklucz
+główny Numer
+Tytuł
+Nazwisko
+ImięKod 
+poczt.
+Miasto}
+Dziedziny
+nagłówek
+krotki
+liczba=liczebność
+atrybuty
+liczba=stopień tabeli
+ 10/23
+Bazy Danych         © Andrzej M. BorzyszkowskiPodstawy teoretyczne
+●Matematyka: relacja r to podzbiór iloczynu kartezjańskiego
+–czyli zbiór “krotek” ( tuple)
+–czyli zbiór rekordów mających (nazwane) pola o wartościach 
+w pewnych zbiorach możliwych wartości
+–uwaga: dopuszczamy również wartość ,,NULL ”
+–r  D1  D2  D3  ....  Dn
+–pola mają (różne) nazwy: np. A1, A2, …, An, gdzie A1:D1, 
+A2:D2, …, An:Dn, kolejność jest nieważna, 
+D1  D2  .......  Dn =                                          
+{x | x.A1 D1, x.A2 D2 ,....., x.An Dn} =
+{{A1,x1,A2,x2,..,An,xn} | x1D1, x2 D2 ,....., xn Dn}
+–zbiór nie ma powtórzeń
+–kolejność elementów w zbiorze jest nieokreślona
+ 11/23
+Bazy Danych         © Andrzej M. BorzyszkowskiRelacje a tabele
+●Matematyczne własności relacji:
+–nie ma podwójnych krotek
+–krotki są nieuporządkowane
+–atrybuty są nieuporządkowane
+●Zawartość tabeli jest uporządkowana, i wiersze i kolumny
+–może zawierać powtórzenia wierszy
+–formalnie nie jest relacją
+–ale można ją uważać za przedstawienie relacji
+ 12/23
+Bazy Danych         © Andrzej M. BorzyszkowskiRelacje a schematy relacji
+●Schematem relacji (schema)  jest jej ,,typ”
+–R(A1,A2,..,An)
+●każdy atrybut A ma przypisaną dziedzinę dom(A)
+–dziedziny można wymienić w schemacie relacji 
+(w praktyce typ dziedziny)
+●Klient(nr:integer, tytul:string, nazwisko:string, 
+imie:string, kod_poczt:integer, miasto:string)
+–inna nazwa: R – zmienna relacyjna, intensja relacji
+●Relacja to konkretny zbiór krotek
+–r(R)  dom(A1)   dom(A2)   dom(A3)   .......  dom(An)
+–inna nazwa: r – stan relacji, bieżący stan relacji, ekstensja 
+relacji
+●Podobnie nagłówek tabeli vs treść tabeli
+ 13/23
+Bazy Danych         © Andrzej M. BorzyszkowskiOgraniczenia modelu relacyjnego 
+a schematy
+●Ograniczenia wynikające z modelu
+–wartości atrybutów są atomowe
+–nie ma powtórzeń wierszy (dwóch krotek o identycznych 
+atrybutach)
+●Ograniczenie wyrażane explicite w schemacie
+–wartości atrybutów muszą należeć do dziedzin
+–pewne atrybuty nie mogą przyjmować NULL
+–wartości kluczowe: nie dwóch krotek o identycznych 
+wartościach pewnych atrybutów
+–inne ograniczenia
+●Ograniczenia wymuszane przez aplikacje zewnętrzne
+–niektóre mogą być alternatywnie wyrażalne w schemacie, 
+ale nie muszą
+ 14/23
+Bazy Danych         © Andrzej M. BorzyszkowskiRelacyjne bazy danych i ich schematy
+●Schemat relacyjnej bazy danych
+–zbiór schematów relacji
+–oraz zbiór więzów integralności
+●Stan relacyjnej bazy danych
+–zbiór stanów (relacji) dla każdego ze schematów relacji 
+bazy danych
+–spełniających więzy integralności
+●Zbiór stanów nie spełniających więzów integralności 
+nazywamy stanem niespójnym bazy danych
+●rozważamy tylko teoretycznie, nie powinien istnieć
+●Język de￿niowania danych: Data De￿nition Language , służy do 
+de￿niowania schematów baz danych
+ 15/23
+Bazy Danych         © Andrzej M. BorzyszkowskiWięzy integralności (t.j. spójności)
+●Warunki, które musi spełniać każdy stan bazy danych
+–SZBD sprawdza więzy integralności przy każdej operacji na 
+bazie danych
+–w przypadku niespełnienia warunków następuje odrzucenie 
+operacji
+–albo inne rozwiązanie
+●Rodzaje warunków:
+–wartości w odpowiedniej dziedzinie
+●w tym różne od NULL
+–jednoznaczność (klucz kandydujący)
+–istnienie (integralność referencyjna)
+–inne warunki określone w schemacie
+ 16/23
+Bazy Danych         © Andrzej M. BorzyszkowskiKlucze kandydujące
+●Klucz kandydujący schematu relacji R jest zbiorem K atrybutów 
+relacji takim, że
+–jednoznaczność: żadne dwie różne krotki relacji r(R) nie 
+mają tej samej wartości dla K
+–nieredukowalność: żaden podzbiór właściwy K nie posiada 
+powyższej własności
+●Przykłady:
+–tabela Pierwiastki_chemiczne  dla układu okresowego 
+pierwiastków posiada pola nazwa, symbol, liczba atomowa 
+– każde pole jednoznacznie identy ￿kuje pierwiastek, każde 
+pole jest kluczem kandydującym
+–tabela Pozycja  ma klucz kandydujący złożony z dwu 
+atrybutów, numer zamówienia i numer towaru, żaden 
+pojedynczy atrybut nie jest kluczem kandydującym
+ 17/23
+Bazy Danych         © Andrzej M. BorzyszkowskiKlucz główny, klucze alternatywne
+●Kluczem głównym schematu relacji nazywamy jeden wybrany 
+klucz kandydujący
+–pozostałe klucze kandydujące nazywamy kluczami 
+alternatywnymi
+●Integralność encji – wartość klucza głównego nie może być NULL
+●Pojęcia klucza można stosować do schematu relacji ale również 
+do relacji (tj. bieżącego stanu)
+–np. numer indeksu jest kluczem głównym dla schematu 
+relacji Student w bazie danych Szkoła Wyższa
+–imię i nazwisko nie jest kluczem kandydującym
+–jest (prawdopodobnie) kluczem dla bieżącej wartości relacji 
+student na wydziale MFI
+ 18/23
+Bazy Danych         © Andrzej M. BorzyszkowskiKlucz obcy
+●Kluczem obcym schematu relacji R2 odwołującym się do 
+schematu relacji R1 (być może = R2) nazywamy zbiór 
+atrybutów FK taki, że
+–wartości atrybutów FK należą do tej samej dziedziny co 
+wartości wskazywane CK
+–CK jest kluczem kandydującym w R1
+–dla każdej krotki w R2 wartość klucza FK jest równa 
+wartości klucza CK pewnej krotki w R1
+–tzn. klucz obcy R2 „wskazuje” krotkę w R1, krotka jest 
+jednoznaczna, skoro CK jest kluczem kandydującym
+–najczęściej klucze obce składają się z jednego atrybutu
+–dopuszcza się, by klucz obcy miał wartość NULL (wówczas 
+niczego nie musi wskazywać)
+ 19/23
+Bazy Danych         © Andrzej M. BorzyszkowskiKlucz obcy, przykłady
+●W schemacie zamówienie będzie klucz obcy wskazujący na 
+klienta
+–pozycja zamówienia wskazuje na zamówienie oraz na towar 
+(dwa klucze obce)
+–schematy zapas i kod_kreskowy również zawierają klucze 
+wskazujące na towar
+●W schemacie szkoły wyższej będzie klucz obcy w tabeli 
+przedmiotów wskazujący na prowadzącego
+–będzie NULL przed dokonaniem obsady zajęć
+●Klucz obcy może wskazywać na klucz kandydujący we własnej 
+tabeli
+–np. w bazie danych pracowników można zapisywać 
+bezpośredniego przełożonego
+–wówczas, oczywiście, co najmniej jedna krotka musi mieć 
+wartość NULL tego klucza 
+ 20/23
+Bazy Danych         © Andrzej M. BorzyszkowskiKlucz obcy, wymagania
+●Wartość klucza obcego występująca w relacji musi pojawić się 
+jako wartość odpowiadającego klucza kandydującego
+–ale odwrotna zależność nie jest wymagana
+–np. istnieją towary niezamawiane, klienci, którzy nie złożyli 
+żadnego zamówienia, a nawet zamówienia bez pozycji
+●Wartość klucza obcego stanowi odwołanie ( reference ) do krotki 
+zawierającej wartość odpowiadającego mu klucza 
+kandydującego (adresat odwołania)
+●Integralność referencyjna: warunek by baza danych w żadnym 
+stanie nie zawierała wartości klucza obcego nieobecnych we 
+wskazywanej tabeli ( dangling references )
+ 21/23
+Bazy Danych         © Andrzej M. BorzyszkowskiOperacje na bazie danych – obsługa 
+naruszenia więzów integralności
+●Operacje na relacjach
+–wstawianie krotki
+–usuwanie krotki
+–mody￿kacja krotki (zmiana wartości atrybutów danej krotki)
+●Wstawianie
+–niewłaściwa wartość atrybutu lub niedozwolona wartość 
+NULL → odrzucenie operacji
+–powtórzona wartość klucza kandydującego → odrzucenie 
+operacji
+–klucz obcy odwołujący się do nieistniejącej krotki → 
+odrzucenie operacji
+ 22/23
+Bazy Danych         © Andrzej M. BorzyszkowskiObsługa naruszenia więzów 
+integralności 2
+●Usuwanie
+–może naruszyć tylko integralność referencyjną (usuwanie 
+adresata odwołania klucza obcego)
+–opcja 1: → odrzucenie operacji
+–opcja 2: operacja usuwania jest propagowana ( cascade)    
+do powiązanych krotek
+–opcja 3: wartości klucza obcego ustawiane są na NULL   
+(o ile schemat to dopuszcza)
+●PostgreSQL, domyślne zachowanie: nie wolno usuwać adresata 
+istniejącego odwołania: ON DELETE NO ACTION
+–opcja usuwania kaskadowego: ON DELETE CASCADE
+–lub ustawiania wartości NULL: ON DELETE SET NULL
+ 23/23
+Bazy Danych         © Andrzej M. BorzyszkowskiObsługa naruszenia więzów 
+integralności 3
+●Mody￿kacja
+–niewłaściwa wartość atrybutu lub niedozwolona wartość 
+NULL → odrzucenie operacji
+–powtórzona wartość klucza kandydującego → odrzucenie 
+operacji
+–mody￿kowany klucz obcy odwołujący się do nieistniejącej 
+krotki →  odrzucenie operacji
+–mody￿kowany klucz kandydujący będący adresatem 
+odwołania pewnego klucza obcego → odrzucenie operacji, 
+–albo mody ￿kacja klucza obcego tak by wskazywał na tę 
+samą krotkę
+●PostgreSQL, domyślne zachowanie: nie wolno mody ￿kować 
+adresata istniejącego odwołania
+–specjalna opcja do mody ￿kacji kaskadowej

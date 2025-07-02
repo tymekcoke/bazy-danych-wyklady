@@ -1,0 +1,335 @@
+Bazy Danych         © Andrzej M. Borzyszkowski 
+Bazy Danych
+Andrzej M. Borzyszkowski
+Instytut Informatyki 
+Uniwersytetu Gdańskiego
+materiały dostępne elektronicznie
+http://inf.ug.edu.pl/~amb
+ 2/24
+Bazy Danych         © Andrzej M. BorzyszkowskiAlgebra relacji
+ 3/24
+Bazy Danych         © Andrzej M. BorzyszkowskiRelacyjna baza danych = relacje + 
+operacje na relacjach
+●Algebra relacji:
+–operacje mogą być ze sobą wielokrotnie składane tworząc 
+wyrażenia relacyjne 
+●Podstawowe operacje relacyjne: 
+–obcięcie/wybór: wybiera pewne wiersze
+–rzut/projekcja: wybiera pewne atrybuty (+ zmiana nazwy)
+–złączenie: produkuje relację o atrybutach z dwu relacji, 
+w tym wspólne atrybuty
+●Operacje teoriomnogościowe: suma, przecięcie, różnica, 
+iloczyn kartezjański
+●Wstawianie, mody ￿kacja, usuwanie krotki
+ 4/24
+Bazy Danych         © Andrzej M. BorzyszkowskiOperacja obcięcia
+●Obcięcie – tylko wiersze spełniające warunek ( predicate )
+–σ[miasto='Gdańsk'] (Klient) (sigma)
+–w notacji bardziej przyjaznej Klient WHERE 
+miasto='Gdańsk'
+●σ[warunek](relacja)
+–relacja jest dowolnym wyrażeniem algebry relacji
+–warunek jest wyrażeniem logicznym
+ nr  tytul         nazwisko      imie     kod_po  miasto       ulica_dom          telefon   
+  5  Pan   Soroczyński     Jan        80-230  Gdańsk  Al. Hallera           58 3090788
+  6  Pani  Niezabitows  Marzena   80-619  Gdańsk  Focha 39-41 m.66    58 3099102
+  7  Pani  Kołak              Agnieszk  80-832  Gdańsk  Wąwóz 4               NULL
+  9  NULL  Hałasa            Ewa        80-511  Gdańsk  Dywizjonu 303/303   58 3483240
+ 10  Pan   Sosnowy          Andrzej    80-266  Gdańsk  Leśna Góra 41h/088  58 3467184
+ 11  Pani  Songin            Barbara    80-376  Gdańsk  Grunwaldzka 1024/  58 5528743
+ 5/24
+Bazy Danych         © Andrzej M. BorzyszkowskiPredykaty w operacji obcięcia
+●Przykładowe postacie warunku obcięcia:
+–równość (i jej zaprzeczenie)   X1=X2, X1≠C
+–porządek (dla dziedzin uporządkowanych)   X1<X2, X1≤X2
+–należenie   X1 in X2
+–warunki złożone
+●A WHERE c1 AND c2  koniunkcja
+●A WHERE c1 OR c2  alternatywa
+●A WHERE NOT c1  negacja
+●Predykat stosowany jest do każdej krotki z osobna
+–nie można więc wyrażać go w zależności od wielu krotek
+●σ[warunek-2](σ[warunek-1](relacja)) jest możliwym zastosowaniem 
+obcięcia
+–wynik będzie ten samo co σ [warunek-2 and warunek-1] (relacja)
+ 6/24
+Bazy Danych         © Andrzej M. BorzyszkowskiOperacja rzutu
+●Rzut – tylko wybrane atrybuty
+–π[nr,nazwisko,imie] (Klient)
+–w notacji ascii 
+Klient(nr,nazwisko,imie)
+●Rzutem relacji R:  π[A1,...,Am](R) jest 
+relacja z nagłówkiem         
+{ A1:DA1,...,Am:DAm } i z treścią 
+składającą się z tych krotek, dla 
+których w relacji R występuje 
+krotka, której fragmentem jest 
+krotka z rzutu
+●uwaga: relacja nie ma powtórzeń, 
+fragmenty wszystkich krotek 
+mogłyby wprowadzić powtórzenienr  nazwisko  imie
+1 Kuśmierek Małgorzata
+2 Chodkiewicz Jan
+3 Szczęsna Jadwiga
+4 Łukowski Bernard
+5 Soroczyński Jan
+6Niezabitowska Marzena
+7 Kołak Agnieszka
+8 Kołak Agnieszka
+9 Hałasa Ewa
+10 Sosnowy Andrzej
+11 Songin Barbara
+12Wróblewicz-Te Urszula
+13 Soroczyński Bogdan
+14 Miszke Wojciech
+15 Zaorski Marcin
+16 Wiśniewska Grażyna
+17 Wierciński Henryk
+18 Bazior Gerard
+ 7/24
+Bazy Danych         © Andrzej M. BorzyszkowskiUogólniony rzut (i zmiana nazwy)
+●Zmiana nazwy
+–całej relacji: ρ [S](R) (rho)
+–poszczególnych atrybutów w relacji: ρ [S(B1,...,Bn)] (R)
+●tutaj zakładamy, że nowy schemat S ma tyle samo 
+atrybutów i o tych samych dziedzinach
+●w praktyce będzie notacja wymieniająca tylko nowe 
+nazwy
+●Rzut w sensie ogólniejszym
+●nagłówek: może zawierać również wyrażenia dla atrybutów 
+relacji (i nazwy dla nich)
+●treść: krotki, do których zastosowano to wyrażenie
+●np. jeśli w nagłówku są atrybuty cena i koszt, to w rzucie 
+może się pojawić nowy atrybut zysk zde ￿niowany jako 
+różnica cena-koszt
+ 8/24
+Bazy Danych         © Andrzej M. BorzyszkowskiIloczyn kartezjański
+●Iloczyn kartezjański (produkt kartezjański, złączenie krzyżowe)
+–nagłówek: suma nagłówków { X:DX,Y:DY }, które muszą 
+mieć różne atrybuty
+–treść: wszystkie możliwe pary krotek { X:x,Y:y }
+ 9/24
+Bazy Danych         © Andrzej M. BorzyszkowskiOperacja złączenia
+●Złączenie zapewnia integrację danych
+–dane z kilku tabel są zbierane w jednej tabeli wynikowej
+●Łączy ze sobą krotki z różnych relacji
+–krotki dobierane są na podstawie pasujących wartości 
+odpowiednich atrybutów
+–najczęściej klucz obcy jednej relacji i klucz kandydujący 
+drugiej relacji
+●Operacja daje się wyrazić za pomocą kolejno
+–iloczynu kartezjańskiego (wszystkie pary krotek)
+–obcięcia (wybór par pasujących do siebie)
+–rzutu (wyrugowanie powtarzających się atrybutów)
+●Oznaczenia matematyczne: R ⋈[warunek złączenia]  S
+ 10/24
+Bazy Danych         © Andrzej M. BorzyszkowskiZłączenie, przykład
+nr  nazwisko  imie
+1 Kuśmierek Małgorzata
+2 Chodkiewicz Jan
+3 Szczęsna Jadwiga
+4 Łukowski Bernard
+5 Soroczyński Jan
+6 Niezabitowska-Nasiadko Marzena
+7 Kołak Agnieszka
+8 Kołak Agnieszkaklient_nr data_zlozenia
+3 13.03.2025
+3 23.03.2025
+3 21.02.2025
+4 22.03.2025
+4 1.02.2025
+5 4.02.2025
+8 12.01.2025
+8 7.01.2025
+ nr         nazwisko           imie   data_zlozenia 
+3 Szczęsna Jadwiga 13.03.2025
+3 Szczęsna Jadwiga 23.03.2025
+3 Szczęsna Jadwiga 21.02.2025
+4 Łukowski Bernard 22.03.2025
+4 Łukowski Bernard 1.02.2025
+5 Soroczyński Jan 4.02.2025
+8 Kołak Agnieszka 12.01.2025
+8 Kołak Agnieszka 7.01.2025
+ 11/24
+Bazy Danych         © Andrzej M. BorzyszkowskiDodatkowe operacje relacyjne – 
+złączenie zewnętrzne
+●Złączenie naturalne gubi te krotki z jednej relacji, które 
+nie pasują do żadnej krotki z drugiej relacji
+–może to być pożądanych rezultatem, np. szukamy 
+zamówień i klientów, którzy je złożyli
+–ale może prowadzić do utraty informacji, np. o klientach, 
+którzy nie złożyli zamówień wcale
+●Złączenie zewnętrzne
+–krotki z jednej z relacji nie pasujące do żadnej krotki 
+z drugiej uzupełniane są wartością NULL
+–można “chronić” tylko jedną z relacji przed utratą 
+informacji: złączenie lewe i prawe
+ 12/24
+Bazy Danych         © Andrzej M. BorzyszkowskiZłączenie zewnętrzne, przykład
+ nr         nazwisko           imie   data_zlozenia 
+1 Kuśmierek Małgorzata
+2 Chodkiewicz Jan
+3 Szczęsna Jadwiga 23.02.2025
+3 Szczęsna Jadwiga 13.02.2025
+3 Szczęsna Jadwiga 23.01.2025
+4 Łukowski Bernard 22.02.2025
+4 Łukowski Bernard 1.02.2025
+5 Soroczyński Jan 4.02.2025
+6 Niezabitowska-Nasiadko Marzena
+7 Kołak Agnieszka
+8 Kołak Agnieszka 12.01.2025
+8 Kołak Agnieszka 7.01.2025
+ 13/24
+Bazy Danych         © Andrzej M. BorzyszkowskiZłączenie naturalne, definicja
+●Niech A i B będą relacjami o nagłówkach { X:DX,Y:DY  } oraz    
+{ Y:DY,Z:DZ  },
+–złączeniem naturalnym relacji A i B, A ⋈ B, jest relacja 
+z nagłówkiem { X:DX,Y:DY,Z:DZ  } i z treścią składającą się 
+z takich krotek { X:x,Y:y,Z:z  }, że krotka { X:x,Y:y } należy 
+do relacji A, a krotka { Y:y,Z:z } należy do relacji B
+●Najczęstszy przypadek: wspólne atrybuty Y stanowią klucz 
+kandydujący w jednej relacji i klucz obcy w drugiej
+–generalnie NIE zakłada się, że atrybuty o tej samej nazwie 
+oznaczają to samo
+–złączenie wymaga jawnego podania nazw atrybutów, które 
+chcemy utożsamić (t.j. warunku łączącego)
+ 14/24
+Bazy Danych         © Andrzej M. BorzyszkowskiZłączenie, własności
+●łączność: ( A ⋈ B) ⋈ C = A ⋈ (B ⋈ C)
+–można opuszczać nawiasy
+●przemienność: A ⋈ B = B ⋈ A
+●jeśli relacje A i B nie mają wspólnych atrybutów, wówczas jest 
+to iloczyn kartezjański relacji: każda krotka A jest 
+skombinowana z każdą krotką  B 
+●jeśli relacje A i B mają identyczne wszystkie atrybuty, wówczas 
+jest to przecięcie relacji: tylko wspólne krotki
+ 15/24
+Bazy Danych         © Andrzej M. BorzyszkowskiOperacje teoriomnogościowe
+●Przekrój (iloczyn, część wspólna)
+–nagłówek: równy wspólnemu  nagłówkowi obu relacji 
+(dopuszczalne są lekkie odchylenia, dziedziny atrybutów 
+nie muszą być identyczne, ale zgodne, np. liczbowe)
+–treść: wszystkie krotki należące do obu relacji
+●Suma (unia)
+–nagłówek: równy wspólnemu  nagłówkowi obu relacji 
+–treść: wszystkie krotki należące do co najmniej jednej 
+z relacji
+●Różnica
+–nagłówek: równy wspólnemu  nagłówkowi obu relacji 
+–treść: krotki z jednej relacji nie należące do drugiej
+–np. studenci, którzy nie zaliczyli egzaminu
+ 16/24
+Bazy Danych         © Andrzej M. BorzyszkowskiWstawianie, modyfikacja, usuwanie 
+krotki
+●Wstawianie krotki
+–wstawiana krotka musi pasować do schematu relacji
+–treść: wszystkie dotychczasowe krotki plus wstawiana
+●Mody￿kacja krotki
+–treść: wszystkie dotychczasowe krotki oprócz 
+mody￿kowanej pozostają bez zmian, mody ￿kowana jest 
+zmieniona
+●Usuwanie krotki
+–treść: wszystkie dotychczasowe krotki oprócz usuniętej
+ 17/24
+Bazy Danych         © Andrzej M. BorzyszkowskiDodatkowe operacje relacyjne – funkcje 
+agregujące (grupowanie)
+●Funkcja agregująca przekształca 
+zbiór wartości w pojedynczą wartość
+–avg: średnia
+–min, max, sum
+–count: liczba elementów
+●Relacja jest grupowana w/g równych 
+wartości niektórych atrybutów
+–do każdej grupy stosowana jest 
+funkcja agregująca
+–szczególny przypadek: cała 
+relacja jest jedną grupą ilu       miasto      
+3 Sopot
+1 Gdakowo
+1 Kielno
+1 Dziewięć Włók
+6 Gdynia
+7 Gdańsk
+1 Tczew
+1 Prabuty
+1 Kwidzyn
+1 Gardeja Pierwsza
+ 18/24
+Bazy Danych         © Andrzej M. BorzyszkowskiRachunek krotek
+ 19/24
+Bazy Danych         © Andrzej M. BorzyszkowskiRachunek krotek
+●Zmienne krotkowe x
+–{x | Φ(x)} lub {< x.A1,..,x.An>  | Φ(x)}
+–<x.A1,..,x.An> jest złożeniem kilku atrybutów w krotkę
+–predykat Φ jest zbudowany z następujących elementów
+●należenie do relacji x ∈ r , zapisywane również r(x)
+●warunki na wartości atrybutów (podobnie jak w obcięciu) 
+●kwanty￿katory „dla każdego”  ∀ x  oraz „istnieje”  ∃ x 
+●elementy połączone są spójnikami koniunkcji, 
+alternatywy oraz negacji
+●Przykład, 
+–relacja   σ [miasto='Gdańsk'] (Klient)  jest równa                            
+{ k | Klient(k) AND k.miasto='Gdańsk' }
+–relacja π [nr,nazwisko,imie] (Klient)  jest równa 
+{<k.nr, k.nazwisko,  k.imie> | Klient( k) }
+ 20/24
+Bazy Danych         © Andrzej M. BorzyszkowskiRachunek krotek, c.d.
+●Kwanty￿katory:
+–nazwiska klientów, którzy złożyli zamówienie:
+–{ k.nazwisko | Klient( k) AND 
+∃ z (Zamówienie( z) AND z.klient_nr= k.nr) }
+–jest to de facto złączenie (a właściwie jego rzut)
+●Nazwiska klientów, którzy zamówili każdy towar dostępny 
+w ofercie
+–{ k.nazwisko | Klient( k) AND ∀  t ( Towar(t) ⇒ 
+∃ z ( Zamówienie( z) AND z.klient_nr= k.nr 
+ AND ∃ p ( Pozycja( p) AND p.zamowienie_nr= z.nr AND 
+p.towar_nr= t.nr ))) }
+ 21/24
+Bazy Danych         © Andrzej M. BorzyszkowskiLogika kwantyfikatorów
+●NOT (∃ u) Φ(u) ⇔  (∀ u) NOT Φ( u)
+●NOT (∀ u) Φ(u) ⇔  (∃ u) NOT Φ( u)
+●W szczególności kwanty ￿kator uniwersalny ∀  może zostać zastąpiony 
+przez bardziej skomplikowane wyrażenie bez niego
+–(∀ u) Φ(u) ⇔  NOT (∃ u) NOT Φ( u)
+–„nieprawda, że istnieje kontrprzykład”
+●Przydatne mogą też być prawa de Morgana dla spójników logicznych
+–NOT (Φ(t) AND Ψ( t)) ⇔  (NOT Φ( t) OR NOT Ψ( t))
+–NOT (Φ(t) OR Ψ(t)) ⇔  (NOT Φ( t) AND NOT Ψ( t))
+●Konstrukcje z kwanty ￿katorem ogólnym powinny ograniczać zbiór 
+potencjalnych wartości
+–tzn. dopuszczalne są jedynie konstrukcje  ∀ x. x ∈ r ⇒ Φ(x) czyli     
+∀ x ∈ r. Φ(x)  
+ 22/24
+Bazy Danych         © Andrzej M. BorzyszkowskiRachunek dziedzin
+ 23/24
+Bazy Danych         © Andrzej M. BorzyszkowskiRachunek dziedzin
+●Zmienne dziedzinowe xi, dla każdej dziedziny atrybutu
+–{<x1,..,xn>  | Φ(x1,..,xn) } gdzie w formule ma prawo 
+wystąpić więcej zmiennych niż chcemy mieć w wyniku
+–predykat Φ jest zbudowany analogicznie jak w rachunku 
+krotek
+●Przykład, 
+–relacja   σ [miasto='Gdańsk'] (Klient)  jest równa            
+{<nr,tytul,nazwisko,..,miasto,kod_p,tel>  | 
+Klient(nr,tytul,nazwisko,..,miasto,kod_p,tel ) AND 
+miasto='Gdańsk ' }
+–relacja π [nr,nazwisko,imie] (Klient)  jest równa 
+{<nr,nazwisko,imie>  | ∃  tytul,miasto,kod_p,tel,.. 
+Klient(nr,tytul,nazwisko,..,miasto,kod_p,tel ) }
+  24/24
+Bazy Danych         © Andrzej M. BorzyszkowskiRachunek dziedzin, QBE
+●Język QBE ( query by example ) opracowany w IBM
+–nie ma potrzeby nazywać zmiennych, których nie 
+potrzebujemy w wyniku
+–nazwy zmiennych często są przykładowymi wynikami              
+(i są syntaktycznie wyróżnione)
+–wyświetl imiona i nazwiska klientów z Gdańska: 
+{<_Jan, _Kowalski> |Klient(_, _, _Kowalski, _Jan,'Gdańsk', _, _) }
+–wyświetl nazwy towarów zamawianych z Gdańska:        
+{ _donica | Klient( _17, _, _, _,'Gdańsk',_, _) 
+AND Zamówienie( _44, _17,_,_) AND Pozycja ( _44, _32, _)  AND 
+Towar( _32, _donica,_,_) }
+●Język używany jest często w środowisku gra ￿cznym (Access)
+–nazwy potrzebnych zmiennych lub stałych wprowadzane są 
+bezpośrednio do nagłówków tabeli

@@ -1,0 +1,137 @@
+Bazy Danych         © Andrzej M. Borzyszkowski 
+Bazy Danych
+Andrzej M. Borzyszkowski
+Instytut Informatyki
+ 
+Uniwersytetu Gdańskiego
+materiały dostępne elektronicznie
+http://inf.ug.edu.pl/~amb
+2/13
+Bazy Danych         © Andrzej M. BorzyszkowskiOrganizacja pamięci – 
+indeksowanie
+3/13
+Bazy Danych         © Andrzej M. BorzyszkowskiPamięć i jej rodzaje
+●Pamięć główna i drugorzędna
+–tzn. pamięć operacyjna vs. pamięć zewnętrzna
+●Pamięć tymczasowa i stała
+–tymczasowa: pamięć operacyjna
+–stała: ￿ash, dysk magnetyczny, taśma magn., CDROM
+4/13
+Bazy Danych         © Andrzej M. BorzyszkowskiPamięć dyskowa
+●Fizyczna organizacja
+–cylindry, ścieżki, sektory
+–bloki (strony), stała wielkość/ pojedyncze kilobajty
+–RAM (random access memory) – możliwość odczytu dowolnego 
+bloku
+●RAID (Redundant Arrays of Independent Disks)
+●zwiększają niezawodność poprzez kopiowanie danych na wielu 
+dyskach
+●zwiększają prędkość działania poprzez współbieżne działanie 
+wielu dysków ( pojemności dysków rosną znacznie szybciej niż 
+prędkości )
+5/13
+Bazy Danych         © Andrzej M. BorzyszkowskiPamięć magnetyczna i optyczna
+●Znacznie wolniejsza niż dyskowa, dostęp głównie sekwencyjny, 
+zastosowania głównie do backup’u
+●nieograniczona liczba zapisów i odczytów
+●Pamięć optyczna – bardzo powolny zapis i odczyt, zapis czasami 
+jednorazowy
+●wierzono w nieograniczoną trwałość nośników optycznych
+●dziś wydaje się, że nie są aż tak trwałe, szczególnie w wersji 
+z możliwością zapisu
+6/13
+Bazy Danych         © Andrzej M. BorzyszkowskiDane na dysku
+●Dane
+–rekord o wielu polach
+–BLOB (binary large object ) – odrębnie przechowywany
+–stała/zmienna długość rekordów
+–zmienna bo: zmienna długość pól, pola wielokrotne, 
+opcjonalne, pola różnego typu
+●Rekordy mogą/nie mogą przekraczać granic bloków 
+(spanned/unspanned )
+–unspanned: głównie dla rekordów stałej długości
+7/13
+Bazy Danych         © Andrzej M. BorzyszkowskiOperacje na plikach
+●Operacje wyszukiwania w pliku i zmiany pliku
+●Operacje plikowe
+–otwarcie pliku – odczytanie nagłówka, buforowanie
+–znalezienie rekordu – ustawienie wskaźnika, odczytanie 
+rekordu do bufora
+–odczytanie/znalezienie kolejnego rekordu
+–mody𿿿kacja rekordu
+–usunięcie rekordu
+–wstawienie rekordu (w miejscu wskazywanym)
+–powrót wskaźnika do początku pliku
+–zamknięcie pliku
+8/13
+Bazy Danych         © Andrzej M. BorzyszkowskiDane w plikach
+●Organizacja pamięci
+●plik nieuporządkowany
+●plik uporządkowany (sekwencyjny) – wg klucza głównego
+●plik bezpośredni – adresy wyliczane wg funkcji mieszającej
+●B-drzewo – drzewo o dużym stopniu 
+9/13
+Bazy Danych         © Andrzej M. BorzyszkowskiPliki nieuporządkowane
+●Wstawianie – na końcu pliku
+●Wyszukiwanie – wyczerpujące (średnio połowa rekordów)
+●Usuwanie – ponowny zapis bloku/bloków bez danego rekordu
+–można stosować znacznik usunięcia
+–konieczność reorganizacji całości ( speed disk )
+–łatwiejsza organizacja dla rekordów stałej długości
+10/13
+Bazy Danych         © Andrzej M. BorzyszkowskiPliki uporządkowane
+●Uporządkowanie wg wartości klucza głównego
+–łatwe odczytanie wszystkich rekordów w porządku klucza
+–łatwe wyszukanie następnego rekordu
+–binarne wyszukiwanie rekordu wg klucza głównego
+–możliwość wyszukiwania wg zakresu klucza głównego
+–żaden zysk dla innych kryteriów wyszukiwania
+●Wstawianie – konieczność przesunięcia ½ bloków
+–alternatywnie: nowe rekordy są nieuporządkowane 
+i okresowa reorganizacja pliku
+●Usuwanie – jw.
+–alternatywnie: znacznik usunięcia i okresowa reorganizacja 
+11/13
+Bazy Danych         © Andrzej M. BorzyszkowskiPliki bezpośrednie ( hash)
+●Wyszukiwanie wg dokładnej wartości klucza
+–niekoniecznie głównego
+–obliczenie adresu bloku na podstawie klucza
+●Przestrzeń kluczy → przestrzeń adresów
+–konieczność obsłużenia kolizji
+●adresowanie otwarte – kolejny adres
+●podwójne adresowanie – inna funkcja obliczająca adres
+–miejsce na nadmiarowe rekordy – i konieczność reorganizacji
+●Wyszukiwanie – bardzo łatwe, tylko dla pojedynczych wartości
+●Wstawianie – kolizje
+●Usuwanie – nieoczywisty algorytm, złożone
+–czasami nie dopuszczamy usuwania w ogóle
+12/13
+Bazy Danych         © Andrzej M. BorzyszkowskiIndeksy
+●Jednopoziome – podają adres bloku
+–wielopoziomowe – indeksy do indeksów
+●Pierwotne – wg klucza głównego, 𿿿zyczne położenie w pliku 
+uporządkowanym
+–wtórne – wg innego klucza
+●Indeks pierwotny –                                                                            
+plik uporządkowany par <wartość klucza, adres bloku>
+–wiele rekordów ma ten sam adres bloku
+–plik indeksów jest mniejszy niż indeksowany plik
+–wyszukiwanie w indeksie sekwencyjne lub binarne
+●Clustering index  – stosowany, gdy plik jest uporządkowany nie wg 
+klucza
+–wiele rekordów ma ten sam klucz
+13/13
+Bazy Danych         © Andrzej M. BorzyszkowskiB-drzewa
+●Można uważać za indeks wielopoziomowy
+●B-drzewo – drzewo o dużym stopniu rozgałęzienia
+–węzeł – n uporządkowanych rekordów i n+1 wskaźników
+–liniowe lub binarne przeszukiwanie rekordów w węźle
+●Wstawianie
+–do pewnego momentu jak w pliku uporządkowanym
+–w razie przepełnienia – tworzenie nowego węzła i podział
+–dodatkowo algorytmy balansowania
+●Usuwanie
+–podobne algorytmy
+●Zastosowanie
+–głównie indeksy
+–plik danych może być B-drzewem

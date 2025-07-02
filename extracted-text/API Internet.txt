@@ -1,0 +1,488 @@
+Bazy Danych         © Andrzej M. Borzyszkowski 
+Bazy Danych
+Andrzej M. Borzyszkowski
+Instytut Informatyki
+ 
+Uniwersytetu Gdańskiego
+materiały dostępne elektronicznie
+http://inf.ug.edu.pl/~amb
+ 2
+Bazy Danych         © Andrzej M. BorzyszkowskiIntegracja ze 
+środowiskami 
+programistycznymi
+API
+ 3
+Bazy Danych         © Andrzej M. BorzyszkowskiProgramowanie
+●Po stronie serwera
+–PL/pgSQL
+–inne języki
+–procedury przechowywane i wyzwalane (trigger)
+●Po stronie klienta
+–libpq, libpgeasy, libpqxx (C/C++)
+–ecpg (embedded C)
+–ODBC (open database connectivity)
+–JDBC (Java database connectivity)
+–perl, php, pgtcl, PyGreSQL (python)
+ 4
+Bazy Danych         © Andrzej M. BorzyszkowskiStruktura aplikacji klienckiej
+połączenie z bazą
+sukces?
+taknie
+wykonanie zapytania
+tak niesukces?
+przetwarzanie wynikówdalsze zapyt.?taknierozłączenie z bazą
+ 5
+Bazy Danych         © Andrzej M. BorzyszkowskiDostęp z użyciem języka C (libpq)
+●Biblioteka libpq
+–Wskazanie kompilatorowi cc katalogów z biblioteką 
+i plikami nagłówkowymi
+–INC=/usr/local/pgsql/include
+–LIB=/usr/local/pgsql/lib -lpq
+●Działanie programu: 
+–połączenie z bazą danych
+–wykonanie (wielu instrukcji SQL)
+–m.in. BEGIN/ROLLBACK/COMMIT
+–rozłączenie z bazą danych
+ 6
+Bazy Danych         © Andrzej M. BorzyszkowskiKrok 1. połączenie z bazą
+#include <stdlib.h>
+#include <libpq-fe.h>
+int main()
+{
+  PGconn *mojepo;
+  PGresult  *wynik;
+/* połączenie z bazą danych*/
+   mojepo = Pqconnectdb ( "dbname=____ password =' 123' user=ja" );
+   if ( Pqstatus ( mojepo ) == NULL) printf ( "brak połączenia\n" );
+   else if ( Pqstatus(mojepo ) == CONNECTION_OK ) 
+printf ( "połączono\n" );
+/* zakończenie połączenia z bazą danych ( na końcu, -- nie teraz!! ) */
+  PQ￿nish ( mojepo );
+  return EXIT_SUCCESS;  
+ }
+ 7
+Bazy Danych         © Andrzej M. BorzyszkowskiKrok 2. pobranie wyników
+/* pobranie informacji z bazy danych poprzez zapytanie SQL*/
+    wynik = Pqexec ( mojepo, "SELECT * FROM klient" );
+/* drukowanie nazw atrybutów */
+    kolumny = PQn ￿elds ( wynik );
+    for ( i = 0; i < kolumny; i++ ) printf ( "%s\n", 
+PQfname ( wynik, i ) );  
+    printf ( "\n\n" );
+/* drukowanie wartości */
+    for ( i = 0; i < PQntuples ( wynik); i++ ) {
+         for (j = 0; j < kolumny; j++) 
+printf( "%s", PQgetvalue ( wynik, i, j ) );
+printf( "\n" );
+    }
+/* oprócz zakończenia połączenia jeszcze czyszczenie pamięci */
+  PQclear (wynik);  
+ 8
+Bazy Danych         © Andrzej M. BorzyszkowskiFunkcje z biblioteki libpq
+●PQresultStatus
+–być może zapytanie było puste, być może zwróciło 
+pusty wynik, być może wynik jest tabelą o zerowej 
+liczbie wierszy, być może odpowiedź serwera jest 
+błędna lub niezrozumiała
+●PQresStatus
+–zamienia powyższe na czytelny napis 
+●PQresultErrorMessage
+●PQgetisnull (wynik, i, j)
+–bez tej funkcji nie odróżni się pustego napisu od 
+wartości NULL
+●PQftype, PQfmod, PQfsize, PQgetlength, 
+–pomagają ustalić typ i wielkość otrzymanego wyniku
+ 9
+Bazy Danych         © Andrzej M. BorzyszkowskiKursory
+●Wynik zwrócony przez SELECT może zawierać b. dużo 
+wierszy
+–aplikacja kliencka/sieć może nie tego przetworzyć
+–lepiej przesyłać dane paczkami
+–potrzebna jest transakcja, bo jeden SELECT został 
+podzielony na wiele FETCH
+ 10
+Bazy Danych         © Andrzej M. BorzyszkowskiKursory, przykład
+PQexec (mojepo, "DECLARE kursor CURSOR FOR SELECT ____ 
+FROM ____");
+PQexec (mojepo, "BEGIN work");
+do {
+      wynik = PQexec (mojepo, "FETCH 24 IN kursor");
+      if (PQresultStatus (wynik) == PGRES_TUPLES_OK) {
+        ntuples = PQntuples (wynik);
+        _______________________
+        PQclear (wynik);
+      }
+      else ntuples = 0;
+    } while (ntuples);  /* tu wiemy, że już koniec danych */
+PQexec (mojepo, "COMMIT work");
+PQexec (mojepo, "CLOSE kursor");
+ 11
+Bazy Danych         © Andrzej M. BorzyszkowskiInny dostęp z użyciem języka C 
+(libpgeasy)
+●Nie udostępnia wszystkich funkcji serwera
+●Nie pozwala połączyć się z kilkoma bazami naraz 
+i otrzymać wyniki z różnych źródeł
+–czyli funkcje “doquery”, “fetch” itd nie będą miały 
+bazy danych jako dodatkowego parametru
+–uwaga: nazwy funkcji są trochę inne niż w libpq
+●Jest prostszy niż biblioteka libpg
+ 12
+Bazy Danych         © Andrzej M. BorzyszkowskiDostęp z użyciem języka C++ (libpqxx)
+●Język obiektowy, oparty na C++
+–wykorzystuje metody dla klas, np.
+–myConnection.activate()
+●Zde￿niowany jest obiekt transaction<> , który może 
+mieć postać transaction<read_commited> lub  
+transaction<serializable> -- dwa rodzaje izolacji dostępne 
+w PostgreSQL
+–transakcje są domyślnie odwoływane, należy więc 
+koniecznie używać transaction<>::commit() jeśli 
+intencją jest zokończenie transakcji
+●Klasa result posiada kilka metod w celu analizy 
+otrzymanych wyników
+●Istnieje obsługa dużych obiektów (binary large object -- 
+BLOb)
+ 13
+Bazy Danych         © Andrzej M. BorzyszkowskiIntegracja z językiem C, inne podejście
+●Kod programu w języku C zawiera specjalne komendy 
+podobne do SQL
+–przed kompilacją należy użyć preprocesora tekstu 
+ecpg
+–zamienia on specjalne komendy na funkcje C oraz 
+typy SQL na typy C
+–przykład nawiązania połączenia
+int main()
+{
+  EXEC SQL CONNECT TO ___ AS mojepo USER ___ 
+USING "___";
+  EXEC SQL DISCONNECT ALL;
+  return (0);
+}
+ 14
+Bazy Danych         © Andrzej M. Borzyszkowski//Test biblioteki ecpg -- wyświetlenie 
+//liczby osób w tabeli pracownik
+EXEC SQL include sqlca;
+int main()
+{
+  EXEC SQL BEGIN DECLARE SECTION;
+    int ile;
+  EXEC SQL END DECLARE SECTION;
+  EXEC SQL CONNECT TO ___ AS mojepo USER ___ USING "___";
+  //Obsluga nieudanego polaczenia
+  if(sqlca.sqlcode!=0){sqlprint();exit(1);}
+  EXEC SQL BEGIN WORK;
+  EXEC SQL SELECT count(*) INTO :ile FROM pracownik;
+     if(sqlca.sqlcode!=0){sqlprint();exit(1);}
+     else{printf("Mamy %d pracownikow w tabeli pracownik.
+\n",ile);}
+  EXEC SQL COMMIT WORK;
+  EXEC SQL DISCONNECT ALL;
+ 15
+Bazy Danych         © Andrzej M. BorzyszkowskiPerl
+●Jak zawsze, funkcje (metody) do połączenia, odczytania 
+oraz zinterpretowania wyników
+#!/usr/bin/perl
+use DBI
+my $mojepo=DBI->connect(“dbi:Pg:”) or die “błąd”;
+my $ile=$mojepo->do(“SELECT _____”);  /* ile wierszy */
+my $oper=$mojepo->prepare(“SELECT ____”);
+if ($oper->execute(){
+  while ___ $mojepo->fetchrow ___
+  }
+$mojepo->disconnect
+ 16
+Bazy Danych         © Andrzej M. BorzyszkowskiBazy danych via Internet
+ 17
+Bazy Danych         © Andrzej M. BorzyszkowskiDostęp sieciowy przez Web
+●HTML
+–wyświetlanie tekstu/ gra ￿ki
+–formularze do wprowadzania tekstu
+●Powody:
+–łatwość integracji ze środowiskiem użytkownika
+●Funkcje:
+–udostępnianie danych statystycznych (raporty)
+–udostępnianie danych konkretnych 
+●(użytkownik wysyła dokładne zapytanie, przepływ 
+dwustronny)
+–udostępnianie całych aplikacji
+●formularze, wprowadzanie danych
+●zapytania, wyświetlanie danych
+ 18
+Bazy Danych         © Andrzej M. BorzyszkowskiDostęp sieciowy, narzędzia
+●PHP
+–wersja 4 i wyżej
+–zainstalowana współpraca z serwerem (PostgreSQL 
+w naszym przypadku)
+●Java servlet
+●JSP – Java Server Pages
+●ASP – Active Server Pages
+ 19
+Bazy Danych         © Andrzej M. BorzyszkowskiHTML (hypertext markup language )
+●Zasadniczo tekst statyczny
+●Idea 1:
+–kod wykonywalny po stronie klienta
+–np. sprawdzanie poprawności wprowadzanych 
+danych
+–narzędzia: javascript, 𿿿ash, shockwave, applety
+●Idea 2:
+–kod wykonywalny po stronie serwera
+–dynamiczne generowanie tekstu
+–w zależności od potrzeb użytkownika
+–w zależności od bieżącego czasu
+ 20
+Bazy Danych         © Andrzej M. BorzyszkowskiArchitektura wielowarstwowa
+Sieć komunikacyjnaSerwer WWW 1Klient 1 Klient 2 Klient 3 Klient 4
+Serwer SZBDSerwer WWW 2
+ 21
+Bazy Danych         © Andrzej M. BorzyszkowskiArchitektura wielowarstwowa –3 
+warstwy
+Sieć komunikacyjnaSerwer WWWKlient 1 Klient 2
+Serwer SZBDSerwer aplikacjiSieć komunikacyjna
+ 22
+Bazy Danych         © Andrzej M. BorzyszkowskiFunkcje warstw: klient, WWW
+●Klient (przeglądarka www, np. Mozilla)
+–wyświetlanie (renderowanie)
+–skrypty klienta
+●Klient – serwer WWW: protokół http (hypertext transfer 
+protocol)
+●Serwer WWW (np. Apache)
+–przetwarzania argumentów adresu strony html
+–komunikacja z serwerem aplikacji
+–CGI (common gateway interface)
+–inne interfejsy
+–skrypty serwera
+●Serwer WWW może być zintegrowany z serwerem 
+aplikacji
+ 23
+Bazy Danych         © Andrzej M. BorzyszkowskiFunkcje warstw: aplikacji, SZBD
+●Serwer aplikacji (osobny lub zintegrowany z serwerem 
+WWW)
+–przesyłanie zapytań do serwera bazodanowego
+–interpretacja odpowiedzi serwera bazodanowego
+–skrypty serwera
+●Serwer WWW – serwer SZBD: protokół ODBC, JDBC 
+(open/Java database connectivity)
+–Serwer SZBD (np. PostgreSQL)
+–przetwarzanie zapytań SQL
+–wysyłanie wyników
+ 24
+Bazy Danych         © Andrzej M. BorzyszkowskiSesje a HTTP, maszyna bezstanowa
+●Protokół http nie przewiduje sesji
+–np. w uniksie login wykonywany jest jeden raz
+–połączenie z bazą danych nie jest rozłączane bez wyraźnej 
+potrzeby
+–w przeciwieństwie, serwer WWW odczytuje podany adres, 
+przetwarza go, odsyła tekst i zapomina o połączeniu
+●Problem:
+–uwierzytelnianie przy połączeniu
+–mody￿kacja ustawień
+●Rozwiązanie:
+–ciasteczka (cookie)
+–są wysyłane przez serwer WWW, przechowywane 
+u klienta, odczytywane przy kolejnych połączeniach
+●mogą mieć termin ważności
+ 25
+Bazy Danych         © Andrzej M. Borzyszkowskiservlet (=server applet)
+●servlet – komunikacja pomiędzy serwerem WWW a 
+serwerem aplikacji
+–np. de￿niuje metody pozwalające serwerowi 
+generować kod html
+–często metody do obsługi (zakładania/odczytywania) 
+ciasteczek
+●Kod servleta jest przekazywany od serwera aplikacji do 
+serwera WWW
+–żądanie od klienta  przesłania tekstu może wywołać 
+servlet po stronie serwera WWW
+–może spowodować żądanie przesłania servleta, jeśli 
+nie był jeszcze obecny 
+ 26
+Bazy Danych         © Andrzej M. BorzyszkowskiJava servlet, przykład
+Public class BankQuery(Servlet extends HttpServlet {
+  public void doGet(HttpServletRequest request, 
+HttpServletResponse result)
+          throws ServletException, IOException {
+          String type =   
+request.getParameter(“type”);
+          String number = 
+request.getParameter(“number”);
+          result.setContentType(“text/html”);
+          PrintWriter out = result.getWriter( );
+          out.println(“<HEAD><TITLE>Query 
+Result</TITLE></HEAD>”);
+          out.println(“<BODY>”);
+          out.println(“Balance on “ + type + number + 
+“=“ + balance);
+          out.println(“</BODY>”);
+          out.close ( );
+  }}
+ 27
+Bazy Danych         © Andrzej M. BorzyszkowskiSkrypty serwera
+●Problem:
+–czy kod programu generujący tekst
+–czy kod html z fragmentami programistycznymi
+●Idea: kod html z zanurzonymi servletami
+●Nowsze języki:
+–Javascript, JScript, JSP, ColdFusion (cfml), Zope
+●Klasyczne rozwiązania:
+–php, perl, python, VBScript
+ 28
+Bazy Danych         © Andrzej M. BorzyszkowskiPrzykład skryptu PHP
+<?php
+header('Content-Type: text/html; charset=iso-8859-2');
+session_start();
+echo('<HTML><HEAD>');
+echo('<META http-equiv="content-type" content="text/html; 
+charset=ISO-8859-2">');
+echo('<TITLE>System zapisów na zabiegi</TITLE>');
+echo("</HEAD><BODY><TABLE background=\"op.gif\" 
+width=\"650\" border=\"0\">");
+$password=$_GET['password'] ;
+if((strlen($password)!==11) || !is_numeric($password)) {
+   echo('<TR><TD><center>Hasło ma niepoprawną budowę... 
+</td></tr><tr><td><center><A 
+href="index.html">Powrót</A></TD></TR></TABLE>');
+    }
+else {
+ 29
+Bazy Danych         © Andrzej M. BorzyszkowskiPrzykład skryptu PHP, c.d.
+if(pg_connect ("host=___ port=5432 dbname=___ user=___ 
+password=___")) {
+  $data1= pg_exec ("SELECT * FROM lekarz WHERE 
+peselL='$password';");
+  $is_lekarz= pg_num_rows ($data1);
+  if($is_lekarz) {
+      echo ("<tr><td><H3>Witaj!!!</h3></td></tr>");
+      while($row= pg_fetch_row ($data1))
+      {
+        echo("<tr><td>dr ".$row[1]." ".$row[2]."<BR>".
+$row[3]."</td></tr>");
+        echo("<TR><TD><form method=\"post\" 
+action=\"terminarz.php\">");
+        echo("<input type=\"hidden\" name=\"password\" 
+value=\"$password\">");
+        echo ("<SELECT name=\"dzien\">");
+                for($i=1;$i<32;$i++) {
+                echo ("<OPTION value=\"$i\">".$i);
+                }
+ 30
+Bazy Danych         © Andrzej M. BorzyszkowskiPrzykład dla języka Python
+#!/usr/bin/python
+# -*- coding: iso-8859-2 -*-
+import menu
+from escape import ES
+mn = menu.menu('news.cgi')
+mn.header()
+print '<CENTER><TABLE align="middle" border="0">'
+if mn.dbIsOk ():
+  if mn.checkAccess ('MSG ADD'):
+    print '<a href="addnews.cgi">Dodaj 
+wiadomość</a>&nbsp;'
+ 31
+Bazy Danych         © Andrzej M. BorzyszkowskiPrzykład z JSP
+<HTML>
+<BODY>
+<FORM METHOD=POST ACTION="SaveName.jsp">
+What's your name? <INPUT TYPE=TEXT NAME=username
+         SIZE=20 VALUE=" <%= user.getUsername() %> "> 
+<P><INPUT TYPE=SUBMIT>
+</FORM>
+</BODY>
+</HTML>
+–wartość odczytana w formularzu jest przekazywana 
+do metody
+–można też generować dynamicznie tagi
+ 32
+Bazy Danych         © Andrzej M. BorzyszkowskiODBC/JDBC
+●Być może dwa najważniejsze interfejsy do użycia bazy 
+danych
+–NIE są ograniczone tylko do PostgreSQL
+–są przeznaczone do komunikacji z każdą bazą danych
+–słowa kluczowe to np. SQLConnect, SQLError, 
+executeStmt , itp.
+●ODBC jest oparty na języku C, JDBC na Javie
+–tzn. program napisany z użyciem *DBC będzie 
+współpracował z każdą bazą danych
+–ale nie będzie mógł wykorzystać specy ￿cznych cech 
+konkretnej bazy danych
+–a jeśli jakieś rozszerzenie potra ￿ je wykorzystać, to 
+nie będzie działać z inną bazą danych
+ 33
+Bazy Danych         © Andrzej M. BorzyszkowskiJDBC – architektura wielowarstwowa
+Menedżer sterowników JDBCAplikacja Java
+Sterownik  JDBC dla PG
+PG Oracle SybaseSterownik  JDBC dla SB JDBC 4 Oracle
+ 34
+Bazy Danych         © Andrzej M. BorzyszkowskiPerl – również architektura 
+wielowarstwowa
+Klasa dla modułów PerlaAplikacja Perla
+Moduł Perl dla PG
+PG OracleModuł Perl dla Oracle
+ 35
+Bazy Danych         © Andrzej M. BorzyszkowskiAtak SQL injection
+ 36
+Bazy Danych         © Andrzej M. BorzyszkowskiAtak SQL injection
+●Przykład PHP
+$data1=pg_exec("
+SELECT * FROM lekarz WHERE peselL=' $password ';
+");
+–jako parametr zapytania ma być przekazany numer pesel 
+np.  12345678910   i ma być wykonane wykonane zapytanie
+SELECT * FROM lekarz WHERE peselL=' 12345678910 ';
+–złośliwy użytkownik zapytany o numer pesel być może 
+wstawi wartość  '; DELETE FROM lekarz; SELECT '  
+i spowoduje wykonanie zapytania SQL
+SELECT * FROM lekarz WHERE peselL=' '; DELETE FROM 
+lekarz; SELECT ' ';
+–złośliwy użytkownik może na każdy parametr podawać 
+–' OR '1'='1   i obserwować wywołane efekty
+ 37
+Bazy Danych         © Andrzej M. BorzyszkowskiAtak SQL injection 2
+●Możliwe szkody:
+–nieautoryzowane zmiany w zawartości bazy danych
+–dostęp do danych poufnych/masowych
+–atak DOS ( denial of service , odmowa usługi) czyli 
+przeciążenie serwera bazodanowego
+–zbadanie dokładnej struktury bazy danych
+–wykonanie poleceń systemowych
+●Warunki wykonania ataku
+–precyzyjna znajomość oprogramowania przez 
+atakującego
+ 38
+Bazy Danych         © Andrzej M. BorzyszkowskiObrona przed SQL injection
+●Zabezpieczenie na poziomie aplikacji:
+–używanie znaków specjalnych, na pewno apostrofów
+●każdy z języków będzie miał swoje rozwiązania
+●np. w PHP   $data1=pg_exec("SELECT * FROM 
+lekarz WHERE 
+peselL='addslashes($password)';");
+●zapytanie  SELECT * FROM lekarz WHERE 
+peselL='\ 12345678910\ '; będzie równoważne 
+poprzedniemu (zakładając, że spacja nie jest brana 
+pod uwagę)
+●zapytanie  SELECT * FROM lekarz WHERE 
+peselL='\ '; DELETE FROM lekarz; SELECT \' ';
+nie będzie groźne i nie zwróci żadnych wyników
+ 39
+Bazy Danych         © Andrzej M. BorzyszkowskiObrona przed SQL injection 2
+●Zabezpieczenie na poziomie aplikacji:
+–można pilnować poprawności typów, 
+–sprawdzać postać parametrów, 
+–nie dopuszczać by zawierały pewne znaki 
+●apostrof, 
+●nawiasy (podejrzenie użycia funkcji), 
+●średniki (kilka poleceń), 
+●dwa minusy (komentarz), 
+●nazwy tabel systemu bazodanowego, 
+●itp.
+–sama długość parametrów też powinna być niewielka
+ 40
+Bazy Danych         © Andrzej M. BorzyszkowskiObrona przed SQL injection 3
+●Zabezpieczenie na poziomie serwera bazodanowego
+–minimalne uprawnienia użytkownika
+–mechanizm zapytań może dopuszczać parametry – 
+należy wówczas z tego korzystać
+●Zabezpieczenia na poziomie serwera aplikacji
+–analiza uprawnień użytkownika końcowego
+–analiza zapytań przesyłanych do bazy danych
+●zakaz wykonania wielu zapytań w jednym
+●zakaz wywoływania poleceń systemowych

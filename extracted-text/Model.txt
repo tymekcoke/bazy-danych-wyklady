@@ -1,0 +1,173 @@
+Bazy Danych         © Andrzej M. Borzyszkowski 
+Bazy Danych
+Andrzej M. Borzyszkowski
+Instytut Informatyki 
+Uniwersytetu Gdańskiego
+materiały dostępne elektronicznie
+http://inf.ug.edu.pl/~amb
+ 2/16
+Bazy Danych         © Andrzej M. BorzyszkowskiModelowanie danych
+ 3/16
+Bazy Danych         © Andrzej M. BorzyszkowskiPrzykłady projektowania diagramów/ 
+Poziomy abstrakcji
+●Poziomy abstrakcji
+–w diagramie dla biblioteki możemy zaproponować encję 
+[książka], którą <wypożycza> [czytelnik]
+–dana książka może być wypożyczona w danym momencie 
+przez jednego tylko czytelnika
+czytelnikimię
+nazwiskonr karty
+autortytuł
+imienazwisko
+wypożycza
+dataksiążkanr inw
+cena rok wydawnictwo
+ 4/16
+Bazy Danych         © Andrzej M. BorzyszkowskiPoziomy abstrakcji, c.d.
+●Biblioteka może posiadać wiele egzemplarzy tej samej książki
+–musimy notować wypożyczenie konkretnego egzemplarza
+–dwie encje: [książka] oraz [egzemplarz]
+–[czytelnik] <wypożycza> [egzemplarz]
+czytelnikimięnazwiskonr karty
+autortytuł
+imienazwisko
+wypożycza
+dataksiążka
+cena rok wydawnictwoegzemplarz
+nr inwmakod
+ 5/16
+Bazy Danych         © Andrzej M. BorzyszkowskiPoziomy abstrakcji, c.d.
+●Można dalej dzielić książkę na książkę w sensie tytułu i na 
+konkretne wydanie książki
+–w projekcie szkoły wyższej może wystąpić przedmiot 
+i grupa zajęciowa
+–w projekcie serwisu sprzętu może wystąpić model sprzętu 
+i egzemplarz z numerem seryjnym
+–projekcie gry może wystąpić sprzęt o znanych 
+właściwościach i egzemplarz takiego sprzętuautortytuł imie
+nazwiskoksiążka
+cena rok wydawnictwoegzemplarz
+nr inwma
+wydanie maidkod
+ 6/16
+Bazy Danych         © Andrzej M. BorzyszkowskiPrzykłady projektowania diagramów/  
+Dane historyczne a dane bieżące
+●Dane historyczne a dane bieżące
+–dana encja może wystąpić w związku tylko raz w danym 
+momencie czasowym, ale z upływem czasu występuje 
+wielokrotnie
+–trzeba notować dwie daty, np. datę wypożyczenia i zwrotu
+egzemplarzczytelnikimię nazwisko
+nr kartydata od data do
+nr inwwypożyczył
+czyta
+data od
+ 7/16
+Bazy Danych         © Andrzej M. BorzyszkowskiDane historyczne a dane bieżące
+●Wymagania funkcjonalne
+–data końcowa jest początkowo nieznana
+–trzeba wymagać, by okresy nie zachodziły na siebie
+–nie dadzą się wyrazić na diagramie
+●W programie korzystającym z bazy danych prawdopodobnie 
+zapisy będą dotyczyć zawsze dat bieżących
+●Dwa rozwiązania:
+–z dwoma odrębnymi związkami, wówczas przenoszenie danych 
+za zakończeniu
+–tylko jeden związek wieloznaczny, wówczas data końcowa 
+musi dopuszczać wartość nieokreśloną
+ 8/16
+Bazy Danych         © Andrzej M. BorzyszkowskiPrzykłady projektowania diagramów
+●Warunki spójności dotyczące związków
+–gdy na diagramie pojawia się cykl, możliwe są trzy sytuacje
+1) jeden ze związków da się wyliczyć z innych – powinien być 
+usunięty
+2) nie ma żadnych zależności pomiędzy różnymi związkami
+3) jeden ze związków zawiera się w innym – sytuacji nie da 
+wyrazić wyłącznie diagramem
+–musi być opisana osobno i implementowana odpowiednio
+ 9/16
+Bazy Danych         © Andrzej M. BorzyszkowskiWarunki spójności dotyczące związków
+●Jeden ze związków da się wyliczyć z innych – powinien być 
+usunięty
+–np. nauczyciel uczy studenta = nauczyciel prowadzi 
+przedmiot, który student zalicza
+–powtórzenie informacji
+–związek <uczy> należy usunąć
+Przedmiot prowadzi Nauczyciel
+student zalicza uczy
+nr leg.nr leg.
+nazwiskonazwisko kod nazwa
+ 10/16
+Bazy Danych         © Andrzej M. BorzyszkowskiWarunki spójności dotyczące 
+związków, c.d.
+●Nie ma żadnych zależności pomiędzy różnymi związkami
+–cykl w diagramie jest przypadkowy
+–wszystkie związki są uprawnione
+klubzawodnik
+gra wjest wychow.nr imię nazwisko
+nazwakod
+ 11/16
+Bazy Danych         © Andrzej M. BorzyszkowskiWarunki spójności dotyczące 
+związków, c.d.
+●Jeden ze związków zawiera się w innym
+–jeśli lekarz wykonuje zabieg, który wymaga specjalizacji, to lekarz 
+musi posiadać tę specjalizację
+–ale nie na odwrót
+Lekarz Specjalizacja
+Zabiegposiada
+wykonuje wymaganazwisko kodnazwanr leg.
+nr data sala
+●Są narzędzia pozwalające kontrolować takie wymaganie
+  12/16
+Bazy Danych         © Andrzej M. BorzyszkowskiPrzykłady projektowania diagramów
+●Tabele słownikowe
+–problem: powtarzanie prostych wpisów
+–rozwiązanie: zaprojektowanie osobnej tabeli, nawet 
+o jednym właściwym atrybucie, i związek jednoznaczny
+●Z punktu widzenia użytkownika końcowego: konieczność 
+wybrania elementu z listy zamiast samodzielnego wpisywania 
+danych
+ 13/16
+Bazy Danych         © Andrzej M. BorzyszkowskiTabele słownikowe
+●Osobna tabela
+–i związek jednoznaczny
+Studentimię nazwisko
+indeks wydziałStudentimię nazwisko
+indeks
+skrót
+Wydziałnazwastudiuje
+ 14/16
+Bazy Danych         © Andrzej M. BorzyszkowskiTabele słownikowe, c.d.
+●Tabela słownikowa będzie miała też zastosowanie w przykładzie 
+biblioteki
+–autor może być autorem wielu książek i warto zadbać o jednolity 
+zapis nazwiska
+–nawet jeśli każda książka ma mieć tylko jednego autora
+–a na pewno osobna encja jest potrzebna gdy autorów książki 
+może być wielu
+tytuł
+książkanr inw
+cenarok
+wydawnictwoautorimię
+nazwiskonapisał
+ 15/16
+Bazy Danych         © Andrzej M. BorzyszkowskiZwiązki niebinarne
+●Związek łączący więcej niż dwie encje może zostać zastąpiony 
+związkami binarnymi
+–poprzez nową encję połączoną z wszystkimi 
+dotychczasowymi w związku
+–np. zamiast <leczy> będzie 
+–[zabieg] wykonuje lekarz/ dotyczy pacjenta/ asystuje 
+pielęgniarka/ odbywa się w gabinecie i terminie
+Lekarz
+leczyChory
+Pielęgniarka gabinet/termin
+ 16/16
+Bazy Danych         © Andrzej M. BorzyszkowskiEncja zamiast związku niebinarnego
+–[zabieg] wykonuje lekarz/ dotyczy pacjenta/ asystuje 
+pielęgniarka/ odbywa się w gabinecie i terminie
+ZabiegLekarz
+PielęgChory
+Gab/Terminwykonuje
+asyst
+odbywadotyczy
